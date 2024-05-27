@@ -286,44 +286,37 @@ variable_template2 = """
 """
 
 
-folder = f'products/'
+folder = 'products/'
 os.makedirs(folder, exist_ok=True)
+
 # Generate individual product pages
-for index, row in df.iterrows():
+for index, row in df.head(10).iterrows():
     product_code = row['Slad Tpnb']
     variable_template_updated = variable_template1.format(
-        nutri_folder = nutri_folder,
-        product_code = row['Slad Tpnb'],
+        nutri_folder=nutri_folder,
+        product_code=product_code,
         product_name=row['Description ENG'],
         product_type=row['Section'].split()[1],
         product_health_label=row['Healthy Flag'],
-        tesco_label = ("Yes" if (row['Own Brand'] == 'Y') else "No")
+        tesco_label=("Yes" if (row['Own Brand'] == 'Y') else "No")
     )
     variable_template_updated2 = variable_template2.format(
         health_score=row['Health Score']
     )
 
     nutritional_facts_template_updated = nutritional_facts_template_variable.format(
-         folder  = folder,
-          product_code = row['Slad Tpnb'],
-         product_name=row['Description ENG'],
-         energy = row['Energy'],
-         fibre = row['Fibre'],
-         salt = row['Salt'],
-         saturates = row['Saturates'],
-         sugar = row['Sugars'],
-         protien = row['Protein']
-)
+        folder=folder,
+        product_code=product_code,
+        product_name=row['Description ENG'],
+        energy=row['Energy'],
+        fibre=row['Fibre'],
+        salt=row['Salt'],
+        saturates=row['Saturates'],
+        sugar=row['Sugars'],
+        protien=row['Protein']
+    )
+
     # Save HTML content to file
     with open(f'{nutri_folder}/{product_code}_facts.html', 'w') as f:
         f.write(nutritional_facts_template_base)
         f.write(nutritional_facts_template_updated)
-        if index ==10:
-            break
-    with open(f'{folder}/{product_code}.html', 'w') as f:
-        f.write(base_template1)
-        f.write(variable_template_updated)
-        f.write(base_template2)
-        f.write(variable_template_updated2)
-        if index == 10:
-            break
