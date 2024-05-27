@@ -17,7 +17,7 @@ os.makedirs(folder, exist_ok=True)
 # Generate QR codes
 for index, row in df.iterrows():
     product_code = row['Slad Tpnb']
-    url = f'{base_url}{product_code}.html'
+    url = f'{base_url}/products/{product_code}.html'
     qr = qrcode.make(url)
     qr.save(f'{folder}/{product_code}.png')
     if index == 10:

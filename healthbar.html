@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Score Bar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .health-bar {
+            position: relative;
+            width: 300px;
+            height: 30px;
+            background: linear-gradient(to right, red, yellow, green);
+            border-radius: 15px;
+            margin: 20px auto;
+        }
+
+        .needle {
+            position: absolute;
+            top: -10px;
+            left: 75%;
+            /* Position the needle according to the health score */
+            width: 2px;
+            height: 50px;
+            background-color: black;
+        }
+
+        .score {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="health-bar">
+            <div class="needle" id="needle"></div>
+        </div>
+        <div class="score" id="score">75</div>
+    </div>
+
+    <script>
+        function updateHealthScore(score) {
+            const needle = document.getElementById('needle');
+            const scoreDisplay = document.getElementById('score');
+            needle.style.left = score + '%';
+            scoreDisplay.textContent = score;
+        }
+
+        // Example: Updating the health score
+        const healthScore = 75; // Change this value to update the score
+        updateHealthScore(healthScore);
+    </script>
+</body>
+
+</html>
