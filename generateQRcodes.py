@@ -7,7 +7,7 @@ excel_file = 'Tesco_Health_Score_P12_CZ.xlsx'
 df = pd.read_excel(excel_file)
 
 # Base URL of your GitHub Pages site
-base_url = 'https://jeevanmerkaji.github.io/GreenHacakthon/'
+base_url = 'https://jeevanmerkaji.github.io/GreenHackathon/'
 
 folder = f'qr_codes/'
 
