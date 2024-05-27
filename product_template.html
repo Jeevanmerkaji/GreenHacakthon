@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <div class="product-detail">
+        <h1 id="product-name"></h1>
+        <p id="product-type"></p>
+        <p id="product-health"></p>
+        <a href="../index.html">Back to list</a>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const productCode = params.get('code');
+        fetch('../products.json')
+            .then(response => response.json())
+            .then(data => {
+                const product = data.find(p => p.product_code === productCode);
+                if (product) {
+                    document.getElementById('product-name').innerText = product.product_name;
+                    document.getElementById('product-type').innerText = `Type: ${product.product_type}`;
+                    document.getElementById('product-health').innerText = `Health: ${product.product_health_label}`;
+                } else {
+                    document.body.innerHTML = '<p>Product not found</p>';
+                }
+            });
+    </script>
+</body>
+
+</html>
