@@ -25,6 +25,109 @@ df = pd.read_excel(excel_file)
 # </body>
 # </html>
 # """
+def get_nutritional_facts(df):
+    nutri_value = pd.DataFrame()
+    nutri_value = df[['Description ENG','Energy','Fibre','Protein','Salt','Saturates','Sugars']]
+    return nutri_value
+# Folder to save the nutritional facts pages
+nutri_folder = 'nutritional_facts/'
+os.makedirs(nutri_folder, exist_ok=True)
+
+nutritional_facts_template_base = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutritional Facts - {product_name}</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #1a73e8;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+    </style>
+</head>
+"""
+nutritional_facts_template_variable = """
+<body>
+    <div class="container">
+        <h1>Nutritional Facts for {product_name}</h1>
+        <table>
+            <tr>
+                <th>Nutrient</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Energy</td>
+                <td>{energy}</td>
+            </tr>
+            <tr>
+                <td>Fibre</td>
+                <td>{fibre}</td>
+            </tr>
+            <tr>
+                <td>Protein</td>
+                <td>{protien}</td>
+            </tr>
+            <tr>
+                <td>Salt</td>
+                <td>{salt}</td>
+            </tr>
+            <tr>
+                <td>Saturates</td>
+                <td>{saturates}</td>
+            </tr>
+            <tr>
+                <td>Sugars</td>
+                <td>{sugar}</td>
+            </tr>
+        </table>
+        <a href=f'{folder}/{product_code}.html'>Back to Home</a>
+    </div>
+</body>
+</html>
+"""
 
 base_template1 = """
 <!DOCTYPE html>
@@ -142,6 +245,11 @@ variable_template1 = """
           <div class="property">
             <span class="property-name">TESCO Product:</span> {tesco_label}
         </div>
+
+        <!-- Button and link for nutritional facts -->
+        <div class="nutritional-facts">
+            <button onclick="window.location.href= f'{nutri_folder}/{product_code}_facts.html'">Nutritional Facts</button>
+        </div>
     </div>
 </div>
 """
@@ -184,15 +292,34 @@ os.makedirs(folder, exist_ok=True)
 for index, row in df.iterrows():
     product_code = row['Slad Tpnb']
     variable_template_updated = variable_template1.format(
+        nutri_folder = nutri_folder,
+        product_code = row['Slad Tpnb'],
         product_name=row['Description ENG'],
         product_type=row['Section'].split()[1],
         product_health_label=row['Healthy Flag'],
         tesco_label = ("Yes" if (row['Own Brand'] == 'Y') else "No")
     )
     variable_template_updated2 = variable_template2.format(
-        health_score=row['Health Score'],
+        health_score=row['Health Score']
     )
 
+    nutritional_facts_template_updated = nutritional_facts_template_variable.format(
+         folder  = folder,
+          product_code = row['Slad Tpnb'],
+         product_name=row['Description ENG'],
+         energy = row['Energy'],
+         fibre = row['Fibre'],
+         salt = row['Salt'],
+         saturates = row['Saturates'],
+         sugar = row['Sugars'],
+         protien = row['Protein']
+)
+    # Save HTML content to file
+    with open(f'{nutri_folder}/{product_code}_facts.html', 'w') as f:
+        f.write(nutritional_facts_template_base)
+        f.write(nutritional_facts_template_updated)
+        if index ==10:
+            break
     with open(f'{folder}/{product_code}.html', 'w') as f:
         f.write(base_template1)
         f.write(variable_template_updated)
