@@ -1,7 +1,8 @@
 import pandas as pd
+import os
 
 # Load the Excel file
-excel_file = 'products.xlsx'
+excel_file = 'Tesco_Health_Score_P12_CZ.xlsx'
 df = pd.read_excel(excel_file)
 
 # Template for the product detail page
@@ -25,13 +26,17 @@ template = """
 </html>
 """
 
+folder = f'products/'
+os.makedirs(folder, exist_ok=True)
 # Generate individual product pages
 for index, row in df.iterrows():
-    product_code = row['product_code']
+    product_code = row['Slad Tpnb']
     html_content = template.format(
-        product_name=row['product_name'],
-        product_type=row['product_type'],
-        product_health_label=row['product_health_label']
+        product_name=row['Description ENG'],
+        product_type=row['Section'],
+        product_health_label=row['Healthy Flag']
     )
-    with open(f'products/{product_code}.html', 'w') as f:
+    with open(f'{folder}/{product_code}.html', 'w') as f:
         f.write(html_content)
+        if index == 10:
+            break
