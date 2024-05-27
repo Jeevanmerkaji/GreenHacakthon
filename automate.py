@@ -139,8 +139,8 @@ variable_template1 = """
         <div class="property">
             <span class="property-name">Health label:</span> {product_health_label}
         </div>
-        <div class="property">
-            <span class="property-name">Color:</span> Blue
+          <div class="property">
+            <span class="property-name">TESCO Product:</span> {tesco_label}
         </div>
     </div>
 </div>
@@ -185,8 +185,9 @@ for index, row in df.iterrows():
     product_code = row['Slad Tpnb']
     variable_template_updated = variable_template1.format(
         product_name=row['Description ENG'],
-        product_type=row['Section'],
-        product_health_label=row['Healthy Flag']
+        product_type=row['Section'].split()[1],
+        product_health_label=row['Healthy Flag'],
+        tesco_label = ("Yes" if (row['Own Brand'] == 'Y') else "No")
     )
     variable_template_updated2 = variable_template2.format(
         health_score=row['Health Score'],
